@@ -1,0 +1,47 @@
+FORMAT CODE SHORTCUT = CONTROL + I
+✨ Running a function is often referred to as 'calling' a function.
+✨ Values sending to a function is called parameters. 
+
+❗️ Expressions are things that can be assigned to a variable, or printed using print(). On the other hand, when we're performing actions such as creating variables, starting a loop, or checking a condition, then we call that a statement.
+Swift lets us skip using the return keyword when we have only one expression in our functions.
+
+✨Swift lets us provide 2 names for each parameter: one to be used externally when calling the function, and one to be used internally inside the function. This is as simple as writing 2 names, separated by a space.
+ ❗️internal parametre ismi olarak in, for vs kullanilabilir.
+✨ You can omit the parameter name by writing _ for external parameter name.
+✨parametreleri fonksiyon tanımında tanimlayabiliriz ama fonksiyon icinde kullanmak zorunda degiliz.
+✨eğer parametreye default deger verirsek o parametreyi fonksiyonu cagirirken kullanmak zorunda degiliz.
+💗Some functions are variadic, which is a fancy word of saying they accept any number of parameters of the same type. You can make any parameter variadic by writing ... after its type. Int parameter is a single integer, whereas Int... is zero or more integers-potentially hundreds.
+
+✏️ Variadic functions
+👾Variadic parameters are converted into arrays inside your function.
+👾Variadic parameters can potentially receive zero values.
+👾You can write your own variadic functions.
+👾 print() is a variadic function.
+👾 Variadic parameters can potentially receive hundreds of values.
+👾A variadic parameter is written with three dots after its type: Int...
+
+
+✨do-try-catch ; do starts a section of code that might cause problems, try is used before every function that might throw an error, and catch lets you handle errors gracefully. If any errors are thrown inside the do block, execution immediately jumps to the catch block.
+✨if functions throw errors, you MUST catch them.
+✨throwing functions must be marked with throws. Throwing functions must be called using try.
+
+✏️ inout ; if you eat to change the parameters passed into a Swift functions, you can pass in one or more parameters as inout, which means they can be changed inside your function and those changes reflect in the original value outside the function.
+🤖Regular parameters are passed into functions are constants.
+🤖Inout parameters must be variables.
+🤖Changing Inout parameters inside a function changes them outside too.
+🤖You can pass several parameters as inout if you want.
+🤖Inout parameters must be passed in using &.
+🤖Inout parameters are marked using the inout keyword.
+
+SUMMARY
+- Functions let us re-use code without repeating ourselves.
+- Functions can accept parameters - just tell Swift the type of each parameter.
+-Functions can return values, and again you just specify what type will be sent back. Use tuples if you want to return several things.
+- You can use different names for parameters externally and internally, or omit the external name entirely.
+- Parameters can have default values, which helps you write less code when specific values are common.
+- Variadic functions accept zero or more of a specific parameter, and Swift converts the input to an array.
+- Functions can throw errors, but you must call them using try and handle errors using catch.
+- You can use inout to change variables inside a function, but it’s usually better to return a new value.
+-fonksiyonlarda parametre adini omit yapmak icin _ kullanılır = _ type: String parametresinde fonksiyonu cagirirken type yazmaya gerek yok.
+
+❗️using tuples to return multiple values from a function is what they are most commonly used for. 
