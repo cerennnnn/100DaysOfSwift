@@ -79,6 +79,7 @@ class ViewController: UIViewController {
                 let finalAlert = UIAlertController(title: title, message: "Final score: \(score)", preferredStyle: .alert)
                 finalAlert.addAction(UIAlertAction(title: "Finished", style: UIAlertAction.Style.cancel))
                 present(finalAlert, animated: true)
+                
             }
             
             print(numberOfQuestions)
