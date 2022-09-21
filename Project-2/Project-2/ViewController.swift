@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet var button1: UIButton!
     @IBOutlet var button2: UIButton!
     @IBOutlet var button3: UIButton!
@@ -21,18 +21,19 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        countries.append("estonia")
-//        countries.append("france")
-//        countries.append("germany")
-//        countries.append("ireland")
-//        countries.append("italy")
-//        countries.append("monaco")
-//        countries.append("nigeria")
-//        countries.append("poland")
-//        countries.append("russia")
-//        countries.append("spain")
-//        countries.append("uk")
-//        countries.append("us")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(showScoreTapped))
+        //        countries.append("estonia")
+        //        countries.append("france")
+        //        countries.append("germany")
+        //        countries.append("ireland")
+        //        countries.append("italy")
+        //        countries.append("monaco")
+        //        countries.append("nigeria")
+        //        countries.append("poland")
+        //        countries.append("russia")
+        //        countries.append("spain")
+        //        countries.append("uk")
+        //        countries.append("us")
         
         countries += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
         
@@ -45,7 +46,7 @@ class ViewController: UIViewController {
         button3.layer.borderColor = UIColor.lightGray.cgColor
         
         askQuestion(action: nil)
-   
+        
     }
     
     func askQuestion(action: UIAlertAction!) {
@@ -56,37 +57,47 @@ class ViewController: UIViewController {
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         
-//        generates a number between 0 and 2
+        //        generates a number between 0 and 2
         correctAnswer = Int.random(in: 0...2)
-        title = "\(countries[correctAnswer].uppercased()) score: \(score)"
-       
-    }
+        title = "\(countries[correctAnswer].uppercased()) - score: \(score)"
         
-        @IBAction func buttonTapped(_ sender: UIButton) {
-            var title: String
-            
-            numberOfQuestions += 1
-            
-            if sender.tag == correctAnswer {
-                title = "Correct"
-                score += 1
-            } else {
-                title = "Wrong, that's the flag of \(countries[sender.tag])"
-                score -= 1
-            }
-            
-            if numberOfQuestions == 10 {
-                let finalAlert = UIAlertController(title: title, message: "Final score: \(score)", preferredStyle: .alert)
-                finalAlert.addAction(UIAlertAction(title: "Finished", style: UIAlertAction.Style.cancel))
-                present(finalAlert, animated: true)
-                
-            }
-            
-            print(numberOfQuestions)
-            
-            let ac = UIAlertController(title: title, message: "Your score is \(score)", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
-            present(ac, animated: true)
+    }
+    
+    @objc func showScoreTapped() {
+       
+        let vc = UIActivityViewController(activityItems: ["My score is \(score)"], applicationActivities: [])
+        vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+        present(vc, animated: true)
+        
+    }
+    
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        var title: String
+        
+        numberOfQuestions += 1
+        
+        if sender.tag == correctAnswer {
+            title = "Correct"
+            score += 1
+        } else {
+            title = "Wrong, that's the flag of \(countries[sender.tag])"
+            score -= 1
         }
+        
+        if numberOfQuestions == 10 {
+            let finalAlert = UIAlertController(title: title, message: "Final score: \(score)", preferredStyle: .alert)
+            finalAlert.addAction(UIAlertAction(title: "Start again", style: .default))
+            present(finalAlert, animated: true)
+            
+            score = 0
+            numberOfQuestions = 0
+            
+            askQuestion(action: nil)
+        }
+        
+        let ac = UIAlertController(title: title, message: "Your score is \(score)", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+        present(ac, animated: true)
+    }
 }
 
