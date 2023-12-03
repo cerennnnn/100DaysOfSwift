@@ -11,68 +11,32 @@ import WebKit
 //delegation -> a programming pattern, a way of writing code
 //a delegate is one thing acting in place of another, answering questions and responding to events on its behalf.
 
-class ViewController: UIViewController, WKNavigationDelegate {
+class ViewController: UITableViewController {
     
-    var webView: WKWebView!
-    var progressView: UIProgressView!
+    let urls = ["apple.c", "hackingwithswift.com"]
     
-    override func loadView() {
-        webView = WKWebView()
-        webView.navigationDelegate = self
-        view = webView
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(openTapped))
-        
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let refresher = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
-        
-        progressView = UIProgressView(progressViewStyle: .default)
-        progressView.sizeToFit()
-        let progressButton = UIBarButtonItem(customView: progressView)
-        
-        toolbarItems = [progressButton, spacer, refresher]
-        navigationController?.isToolbarHidden = false
-        
-        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
-        //observer -> ViewController
-        //we wanna observe webview's estimatedProgress prooperty
-        //we want the new value that was just set
-        
-        
-        let url = URL(string: "https://hackingwithswift.com")!
-        webView.load(URLRequest(url: url))
-        webView.allowsBackForwardNavigationGestures = true
-    }
-
-    @objc func openTapped() {
-        let ac = UIAlertController(title: "Open page...", message: nil, preferredStyle: .actionSheet)
-        ac.addAction(UIAlertAction(title: "apple.com", style: .default, handler: openPage))
-        ac.addAction(UIAlertAction(title: "hackingwithswift.com", style: .default, handler: openPage))
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-        present(ac, animated: true)
+        title = "Easy Browser"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func openPage(action: UIAlertAction) {
-        guard let actionTitle = action.title else { return }
-        guard let url = URL(string: "https://" + actionTitle) else { return }
-        
-        webView.load(URLRequest(url: url))
-    }
-
-    //called when the webview finished loading its page
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        title = webView.title
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return urls.count
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "estimatedProgress" {
-            progressView.progress = Float(webView.estimatedProgress)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = urls[indexPath.row]
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "DetailsViewController") as? DetailsViewController {
+            vc.cellURL = urls[indexPath.row]
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
-
