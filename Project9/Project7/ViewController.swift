@@ -14,6 +14,11 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        performSelector(inBackground: #selector(fetchJSON), with: nil)
+        fetchJSON()
+    }
+    
+    @objc func fetchJSON() {
         let urlString: String
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Credits", style: .plain, target: self, action: #selector(showCredits))
@@ -24,19 +29,23 @@ class ViewController: UITableViewController {
         } else {
             urlString = "https://www.hackingwithswift.com/samples/petitions-2.json"
         }
+        
         if let url = URL(string: urlString) {
             if let data = try? Data(contentsOf: url) {
                 parse(json: data)
                 return
             }
         }
-            showError()
+        
+        performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false)
+        showError()
     }
     
-    func showError() {
+    @objc func showError() {
         let ac = UIAlertController(title: "Loading Error", message: "There was a problem loading the feed; please check your connection and try again.", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(ac, animated: true)
+        
     }
     
     func parse(json: Data) {
@@ -45,7 +54,10 @@ class ViewController: UITableViewController {
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json) {
             petitions = jsonPetitions.results
             filteredPetitions = petitions
-            tableView.reloadData()
+            
+            tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+        } else {
+            performSelector(onMainThread: #selector(showError), with: nil, waitUntilDone: false)
         }
     }
     
@@ -62,34 +74,25 @@ class ViewController: UITableViewController {
             textfield.placeholder = "Search petition here..."
         }
         
-        DispatchQueue.global(qos: .background).async {
-            let filterAction = UIAlertAction(title: "Filter", style: .default) { [weak self] _ in
-                guard let filteredPetition = ac.textFields?[0].text else { return }
-                guard let filtered = self?.filteredPetitions.filter({ $0.body.contains(filteredPetition) }) else { return }
-                
-                if filtered.isEmpty {
-                    self?.petitions = []
-                    self?.addTextField()
-                } else {
-                    self?.petitions = filtered
-                }
-                
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-                
-                
+        let filterAction = UIAlertAction(title: "Filter", style: .default) { [weak self] _ in
+            guard let filteredPetition = ac.textFields?[0].text else { return }
+            guard let filtered = self?.filteredPetitions.filter({ $0.body.contains(filteredPetition) }) else { return }
+            
+            if filtered.isEmpty {
+                self?.petitions = []
+                self?.addTextField()
+            } else {
+                self?.petitions = filtered
             }
-            ac.addAction(filterAction)
+            self?.tableView.reloadData()
         }
-        
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
             self?.petitions = self!.filteredPetitions
             self?.tableView.reloadData()
         }
         
-        
+        ac.addAction(filterAction)
         ac.addAction(cancelAction)
         present(ac, animated: true)
         

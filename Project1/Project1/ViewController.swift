@@ -18,6 +18,11 @@ class ViewController: UITableViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
         
+        performSelector(inBackground: #selector(loadFromBundle), with: nil)
+        
+    }
+    
+    @objc func loadFromBundle() {
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)

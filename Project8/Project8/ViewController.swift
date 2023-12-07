@@ -125,7 +125,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadLevel()
+        performSelector(inBackground: #selector(loadLevel), with: nil)
     }
 
     @objc func letterTapped(_ sender: UIButton) {
@@ -158,10 +158,12 @@ class ViewController: UIViewController {
     }
     
     func levelUp(action: UIAlertAction) {
-        level += 1
-        
-        solutions.removeAll(keepingCapacity: true)
-        loadLevel()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.level += 1
+            
+            self?.solutions.removeAll(keepingCapacity: true)
+            self?.loadLevel()
+        }
         
         for button in letterButtons {
             button.isHidden = false
@@ -178,7 +180,7 @@ class ViewController: UIViewController {
         activatedButtons.removeAll()
     }
 
-    func loadLevel() {
+    @objc func loadLevel() {
         var clueString = ""
         var solutionsString = ""
         var letterBits = [String]()
@@ -204,16 +206,23 @@ class ViewController: UIViewController {
                 }
             }
         }
-        cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
-        answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        letterButtons.shuffle()
-        
-        if letterButtons.count == letterBits.count {
-            for i in 0..<letterButtons.count {
-                letterButtons[i].setTitle(letterBits[i], for: .normal)
+        DispatchQueue.main.async { [weak self] in
+            self?.cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
+            self?.answersLabel.text = solutionsString.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            self?.letterButtons.shuffle()
+            
+            if self?.letterButtons.count == letterBits.count {
+                guard let letterButtonsCount = self?.letterButtons.count else { return }
+                for i in 0..<letterButtonsCount {
+                    self?.letterButtons[i].setTitle(letterBits[i], for: .normal)
+                }
             }
         }
+        
+        
+       
     }
     
     func showAlert(title: String, message: String, buttonTitle: String , action: ((UIAlertAction) -> Void)? = nil) {
