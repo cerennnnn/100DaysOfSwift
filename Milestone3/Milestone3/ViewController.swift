@@ -169,8 +169,10 @@ class ViewController: UIViewController {
     }
     
     func playAgain(action: UIAlertAction) {
+        score = 0
         underscoreLabel.text = getLRandomWordBits()
         userTextField.text = ""
+        scoreLabel.text = "Score: \(score)"
     }
 }
 
