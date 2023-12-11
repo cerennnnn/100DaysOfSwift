@@ -13,7 +13,7 @@ import WebKit
 
 class ViewController: UITableViewController {
     
-    let urls = ["apple.c", "hackingwithswift.com"]
+    let urls = ["apple.com", "hackingwithswift.com"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
