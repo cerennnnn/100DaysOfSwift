@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var darkFrameView: UIView!
     @IBOutlet weak var changeFilterButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
@@ -25,6 +26,7 @@ class ViewController: UIViewController {
         title = "InstaFilter"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(importPicture))
         
+        darkFrameView.alpha = 0
         context = CIContext()
         currentFilter = CIFilter(name: "CISepiaTone")
     }
@@ -94,6 +96,8 @@ extension ViewController: UIImagePickerControllerDelegate & UINavigationControll
         guard let image = info[.editedImage] as? UIImage else { return }
         dismiss(animated: true)
         currentImage = image
+        darkFrameView.alpha = 1
+
         
         let beginImage = CIImage(image: currentImage)
         currentFilter.setValue(beginImage, forKey: kCIInputImageKey)

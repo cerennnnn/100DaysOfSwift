@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         
         askQuestion()
     }
-
+    
     @objc func askQuestion(action: UIAlertAction! = nil) {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
@@ -54,11 +54,19 @@ class ViewController: UIViewController {
         buttonTag = sender.tag
         numberOfQuestions += 1
         
+        UIView.animate(withDuration: 0.2, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { _ in
+            UIView.animate(withDuration: 0.2) {
+                sender.transform = .identity
+            }
+        }
+        
         if numberOfQuestions != 5 {
             play()
         } else {
             gameOver()
-        }   
+        }
     }
     
     func play(action: UIAlertAction! = nil) {
@@ -80,7 +88,7 @@ class ViewController: UIViewController {
         score = 0
         numberOfQuestions = 0
     }
-
+    
     func showAlert(title: String, message: String, buttonTitle: String, action: ((UIAlertAction) -> Void)?) {
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: action))
