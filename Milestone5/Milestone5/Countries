@@ -1,0 +1,11 @@
+{
+    "countries": [
+        {
+            "countryName": "Turkey",
+            "countryCode": "TR",
+            "countryPopulation": 84780000,
+            "countryFlag": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Turkey_flag_300.png",
+            "countryDetail": "Turkey, officially the Republic of Turkey (Turkish: Türkiye Cumhuriyeti), is a country located at the juncture of Eurasia, with a small portion called East Thrace on the Balkan Peninsula in Southeast Europe. It borders the Black Sea to the north; Georgia to the northeast; Armenia, Azerbaijan, and Iran to the east; Iraq to the southeast; Syria and the Mediterranean Sea to the south; the Aegean Sea to the west; and Greece and Bulgaria to the northwest. Cyprus is off the south coast."
+        }
+    ]
+}
