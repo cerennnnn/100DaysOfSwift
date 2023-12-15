@@ -24,6 +24,8 @@ class DetailViewController: UIViewController {
             imageView.image = UIImage(named: imageToLoad)
             title = "Picture \(currentImage) of \(total)"
         }
+        
+        assert(selectedImage != nil, "Image successfully loaded -> \(selectedImage))")
     }
     
     override func viewWillAppear(_ animated: Bool) {
