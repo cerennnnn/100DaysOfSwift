@@ -116,3 +116,44 @@ extension String {
 }
 
 print("this\nis\na\ntest".lines)
+
+extension UIView {
+    func bounceOut(duration: TimeInterval) {
+        UIView.animate(withDuration: duration) {
+            self.transform = CGAffineTransform(scaleX: 0.0001, y: 0.0001)
+        }
+    }
+}
+
+extension Int {
+    var isPositive: Bool {
+        return self > 0 ? true : false
+    }
+}
+
+extension Int {
+    func times(_ text: () -> ()) {
+        if self.isPositive {
+            for _ in 0..<self {
+                text()
+            }
+        }
+    }
+}
+
+5.times {
+    print("Hello")
+}
+
+
+extension Array where Element: Comparable {
+    mutating func remove(item: Element) {
+        if let index = self.firstIndex(of: item) {
+            self.remove(at: index)
+        }
+    }
+}
+
+var array = [1, 2, 3, 2]
+array.remove(item: 2)
+print(array)
