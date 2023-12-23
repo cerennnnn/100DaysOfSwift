@@ -22,7 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var lastTouchPosition: CGPoint?
     var motionManager: CMMotionManager?
     var isGameOver = false
-
+    var node: SKSpriteNode!
     var scoreLabel: SKLabelNode!
     var score: Int = 0 {
         didSet {
@@ -71,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if letter == "x" {
                     //load wall
-
+                    
                     let node = SKSpriteNode(imageNamed: "block")
                     node.position = position
                     node.physicsBody = SKPhysicsBody(rectangleOf: node.size)
