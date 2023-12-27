@@ -16,9 +16,23 @@ class GameViewController: UIViewController {
     @IBOutlet weak var angleLabel: UILabel!
     @IBOutlet weak var velocityLabel: UILabel!
     @IBOutlet weak var velocitySlider: UISlider!
-    
     @IBOutlet weak var playerNumber: UILabel!
     @IBOutlet weak var launchButton: UIButton!
+    
+    var player1ScoreLabel: UILabel!
+    var player2ScoreLabel: UILabel!
+    
+    var player1Score = 0 {
+        didSet {
+            player1ScoreLabel.text = "Player1: \(player1Score)"
+        }
+    }
+    var player2Score = 0 {
+        didSet {
+            player2ScoreLabel.text = "Player2: \(player2Score)"
+        }
+    }
+    let maxRounds = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,8 +58,24 @@ class GameViewController: UIViewController {
         
         angleChanged(self)
         velocityChanged(self)
+        
+        
+        player1ScoreLabel = UILabel(frame: CGRect(x: 20, y: 20, width: 100, height: 30))
+        player1ScoreLabel.textColor = UIColor.white
+        player1ScoreLabel.text = "Player 1: 0"
+        view.addSubview(player1ScoreLabel)
+        
+        player2ScoreLabel = UILabel(frame: CGRect(x: view.bounds.width - 120, y: 20, width: 100, height: 30))
+        player2ScoreLabel.textColor = UIColor.white
+        player2ScoreLabel.text = "Player 2: 0"
+        view.addSubview(player2ScoreLabel)
     }
-
+    
+    func updateScores() {
+        player1ScoreLabel.text = "Player 1: \(player1Score)"
+        player2ScoreLabel.text = "Player 2: \(player2Score)"
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return .allButUpsideDown
@@ -53,11 +83,10 @@ class GameViewController: UIViewController {
             return .all
         }
     }
-
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
     
     @IBAction func angleChanged(_ sender: Any) {
         angleLabel.text = "Angle: \(Int(angleSlider.value))°"

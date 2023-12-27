@@ -20,7 +20,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var player1: SKSpriteNode!
     var player2: SKSpriteNode!
     var banana: SKSpriteNode!
-    
+    var windLabel: SKLabelNode!
+
     var currentPlayer = 1
     
     override func didMove(to view: SKView) {
@@ -29,7 +30,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createPlayers()
         
         physicsWorld.contactDelegate = self
+        
+        windLabel = SKLabelNode(fontNamed: "Arial")
+        windLabel.fontSize = 18
+        windLabel.fontColor = UIColor.white
+        windLabel.position = CGPoint(x: size.width / 2, y: size.height - 30)
+        addChild(windLabel)
+        
+        setRandomWind()
     }
+    
+    func setRandomWind() {
+           let windDirection = CGFloat.random(in: -1.0...1.0)
+           let windStrength = CGFloat.random(in: 1.0...5.0)
+
+           physicsWorld.gravity = CGVector(dx: windDirection * windStrength, dy: -9.8)
+
+           let formattedWind = String(format: "Wind: %.1f, %.1f", windDirection, windStrength)
+           windLabel.text = formattedWind
+       }
     
     func createBuildings() {
         var currentX: CGFloat = -15
@@ -157,17 +176,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.removeFromParent()
         banana.removeFromParent()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-            let newGame = GameScene(size: self.size)
-            newGame.viewController = self.viewController
-            self.viewController?.currentGame = newGame
-            
-            self.changePlayer()
-            newGame.currentPlayer = self.currentPlayer
-            
-            let transition = SKTransition.doorway(withDuration: 1.5)
-            self.view?.presentScene(newGame, transition: transition)
-        })
+        
+        if player == player1 {
+            viewController?.player1Score += 1
+        } else {
+            viewController?.player2Score += 1
+        }
+        
+        if viewController?.player1Score == viewController?.maxRounds || viewController?.player2Score == viewController?.maxRounds {
+            endGame()
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                let newGame = GameScene(size: self.size)
+                newGame.viewController = self.viewController
+                self.viewController?.currentGame = newGame
+                
+                self.changePlayer()
+                newGame.currentPlayer = self.currentPlayer
+                
+                let transition = SKTransition.doorway(withDuration: 1.5)
+                self.view?.presentScene(newGame, transition: transition)
+            })}
+    }
+    
+    func endGame() {
+        let winner: String
+        if viewController?.player1Score == viewController?.maxRounds {
+            winner = "Player 1"
+        } else {
+            winner = "Player 2"
+        }
+        
+        let gameOverLabel = SKLabelNode(text: "Game Over\n\(winner) Wins!")
+        gameOverLabel.fontSize = 36
+        gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        addChild(gameOverLabel)
     }
     
     func bananaHit(building: SKNode, atPoint contactPoint: CGPoint) {
@@ -204,6 +247,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if abs(banana.position.y) > 1000 {
             banana.removeFromParent()
             banana = nil
+            setRandomWind()
             changePlayer()
         }
     }
